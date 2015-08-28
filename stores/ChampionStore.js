@@ -1,6 +1,5 @@
 import BaseStore from 'fluxible/addons/BaseStore';
 import ChampionActions from '../ChampionActions';
-import api from '../api';
 
 class ChampionStore extends BaseStore {
   constructor(dispatcher) {
@@ -80,11 +79,19 @@ class ChampionStore extends BaseStore {
 }
 
 function getEmptyRunePage() {
+  function repeat(value, times) {
+    let ret = [];
+    for (let i = 0; i < times; i++) {
+      ret.push(value);
+    }
+    return ret;
+  }
+
   return {
-    quints: new Array(3),
-    marks: new Array(9),
-    seals: new Array(9),
-    glyphs: new Array(9)
+    quints: repeat('', 3),
+    marks: repeat('', 9),
+    seals: repeat('', 9),
+    glyphs: repeat('', 9)
   };
 }
 
