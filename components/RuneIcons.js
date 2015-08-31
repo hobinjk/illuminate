@@ -8,9 +8,11 @@ class RuneIcons extends React.Component {
     this.picker.setState({visible: true, target: event.target});
   }
   render() {
-    let icons = this.props.runes.map(rune => {(
-      <RuneIcon rune={rune} onClick={this.showPicker}/>
-    )});
+    console.log(this.props.runes);
+    let icons = this.props.runes.map(rune => {
+      return <RuneIcon rune={rune} onClick={this.showPicker}/>;
+    });
+    console.log(icons);
     this.picker = (
       <RunePicker />
     );

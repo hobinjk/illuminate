@@ -1,16 +1,17 @@
 import BaseStore from 'fluxible/addons/BaseStore';
 import ChampionActions from '../ChampionActions';
+import staticApi from '../static/api.js';
 
 class ChampionStore extends BaseStore {
   constructor(dispatcher) {
     super(dispatcher);
-    this.selectedChampion = 'teemo';
+    this.champion = staticApi.getChampionById('Tristana');
     this.runePage = getEmptyRunePage();
-    this.buildOrder = [];
+    this.buildOrder = [staticApi.getItemById('3031')];
   }
 
-  getSelectedChampion() {
-    return this.selectedChampion;
+  getChampion() {
+    return this.champion;
   }
 
   getRunePage() {
@@ -21,8 +22,8 @@ class ChampionStore extends BaseStore {
     return this.buildOrder;
   }
 
-  selectChampion({champion}) {
-    this.selectedChampion = champion;
+  setChampion({champion}) {
+    this.champion = champion;
     this.emitChange();
   }
 
@@ -65,14 +66,14 @@ class ChampionStore extends BaseStore {
 
   dehydrate() {
     return {
-      selectedChampion: this.selectedChampion,
+      champion: this.champion,
       runePage: this.runePage,
       buildOrder: this.buildOrder
     }
   }
 
-  rehydrate({selectedChampion, runePage, buildOrder}) {
-    this.selectedChampion = selectedChampion;
+  rehydrate({champion, runePage, buildOrder}) {
+    this.champion = champion;
     this.runePage = runePage;
     this.buildOrder = buildOrder;
   }
@@ -88,16 +89,16 @@ function getEmptyRunePage() {
   }
 
   return {
-    quints: repeat('', 3),
-    marks: repeat('', 9),
-    seals: repeat('', 9),
-    glyphs: repeat('', 9)
+    quints: repeat(staticApi.getRuneById('5335'), 3),
+    marks: repeat(staticApi.getRuneById('5245'), 9),
+    seals: repeat(staticApi.getRuneById('5317'), 9),
+    glyphs: repeat(staticApi.getRuneById('5289'), 9)
   };
 }
 
 ChampionStore.storeName = 'ChampionStore';
 ChampionStore.handlers = {};
-ChampionStore.handlers[ChampionActions.SELECT_CHAMPION] = 'selectChampion';
+ChampionStore.handlers[ChampionActions.SET_CHAMPION] = 'setChampion';
 ChampionStore.handlers[ChampionActions.SET_QUINT] = 'setQuint';
 ChampionStore.handlers[ChampionActions.SET_MARK] = 'setMark';
 ChampionStore.handlers[ChampionActions.SET_SEAL] = 'setSeal';

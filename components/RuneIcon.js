@@ -1,15 +1,12 @@
 import React from 'react';
 import staticApi from '../static/api';
 
-import './RuneIcon.css';
-
 class RuneIcon extends React.Component {
-  showPicker(event) {
-    console.log(event.target);
-    this.picker.setState({visible: true, target: event.target});
-  }
   render() {
-    return <img src={staticApi.getRuneIcon(this.props.rune)} className="rune-icon"/>;
+    return <img src={staticApi.getIcon(this.props.rune)}
+                title={this.props.rune.name}
+                alt={this.props.rune.name}
+                className="icon rune-icon"/>;
   }
 }
 

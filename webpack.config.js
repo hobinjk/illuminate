@@ -14,20 +14,19 @@ var webpackConfig = {
   output: {
     path: path.resolve('./build/js'),
     publicPath: '/public/js/',
-    filename: 'main.js'
+    filename: 'bundle.js',
+    chunkFilename: '[name].bundle.js'
   },
   module: {
     loaders: [
+      { test: /\.json$/, loader: 'json-loader'},
+      { test: /\.css$/, loader: 'style!css!autoprefixer?browsers=last 2 version'},
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loaders: [
-          require.resolve('react-hot-loader'),
-          require.resolve('babel-loader')
-        ]
+        loaders: ['react-hot', 'babel?cacheDirectory']
       },
-      { test: /\.json$/, loader: 'json-loader'},
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader') }
+      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'file' }
     ]
   },
   plugins: [
@@ -35,10 +34,10 @@ var webpackConfig = {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        BROWSER: 'true'
       }
-    }),
-    new ExtractTextPlugin('[name].css')
+    })
   ],
   devtool: 'eval'
 };

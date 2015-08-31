@@ -23,6 +23,7 @@ const debug = debugLib('illuminate');
 
 const server = express();
 server.use('/public', express.static(path.join(__dirname, '/build')));
+server.use('/assets', express.static(path.join(__dirname, '/assets')));
 
 const fetchrPlugin = app.getPlugin('FetchrPlugin');
 fetchrPlugin.registerService(riotService);
@@ -39,7 +40,7 @@ server.use((req, res, next) => {
 
   debug('Rendering Application component into html');
   const html = React.renderToStaticMarkup(htmlComponent({
-    clientFile: env === 'production' ? 'main.min.js' : 'main.js',
+    clientFile: env === 'production' ? 'build.min.js' : 'build.js',
     context: context.getComponentContext(),
     state: exposed,
     markup: React.renderToString(createElementWithContext(context))

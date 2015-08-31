@@ -1,6 +1,7 @@
 import React from 'react';
-import SelectedChampionIcon from './SelectedChampionIcon.js';
-import RunePage from './RunePage.js';
+import ChampionIcon from './ChampionIcon';
+import BuildOrder from './BuildOrder';
+import RunePage from './RunePage';
 
 class Application extends React.Component {
   render() {
@@ -8,7 +9,8 @@ class Application extends React.Component {
       <div>
         <h2>Home</h2>
         <p>Welcome to the site!</p>
-        <SelectedChampionIcon />
+        <ChampionIcon />
+        <BuildOrder />
         <RunePage />
       </div>
     );
