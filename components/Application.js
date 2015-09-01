@@ -1,20 +1,33 @@
 import React from 'react';
-import ChampionIcon from './ChampionIcon';
+import Champion from './Champion';
 import BuildOrder from './BuildOrder';
 import RunePage from './RunePage';
+import { provideContext } from 'fluxible-addons-react';
+import StatGraphs from './StatGraphs';
 
 class Application extends React.Component {
   render() {
     return (
       <div>
-        <h2>Home</h2>
-        <p>Welcome to the site!</p>
-        <ChampionIcon />
-        <BuildOrder />
-        <RunePage />
+        <div id="topbar">
+          <span className="title-topbar">Illuminate</span>
+          <div id="topbar-menu">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/how-to">How To</a>
+          </div>
+        </div>
+        <div id="application">
+          <Champion />
+          <BuildOrder />
+          <RunePage />
+          <StatGraphs/>
+        </div>
       </div>
     );
   }
 }
+
+Application = provideContext(Application);
 
 export default Application;

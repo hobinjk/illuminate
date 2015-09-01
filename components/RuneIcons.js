@@ -4,19 +4,16 @@ import RuneIcon from './RuneIcon';
 
 class RuneIcons extends React.Component {
   showPicker(event) {
-    console.log(event.target);
     this.picker.setState({visible: true, target: event.target});
   }
   render() {
-    console.log(this.props.runes);
     let icons = this.props.runes.map(rune => {
       return <RuneIcon rune={rune} onClick={this.showPicker}/>;
     });
-    console.log(icons);
     this.picker = (
       <RunePicker />
     );
-    return (<div>
+    return (<div className="rune-icons">
       {icons}
       {this.picker}
     </div>);

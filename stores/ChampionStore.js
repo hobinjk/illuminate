@@ -5,9 +5,10 @@ import staticApi from '../static/api.js';
 class ChampionStore extends BaseStore {
   constructor(dispatcher) {
     super(dispatcher);
+    this.dispatcher = dispatcher;
     this.champion = staticApi.getChampionById('Tristana');
     this.runePage = getEmptyRunePage();
-    this.buildOrder = [staticApi.getItemById('3031')];
+    this.buildOrder = [staticApi.getItemById('plus')];
   }
 
   getChampion() {
@@ -47,20 +48,12 @@ class ChampionStore extends BaseStore {
     this.emitChange();
   }
 
-  addItem({item}) {
-    this.buildOrder.push(item);
-    this.emitChange();
-  }
-
-  removeItemIndex({index}) {
-    this.buildOrder = this.buildOrder.splice(index, 1);
-    this.emitChange();
-  }
-
-  swapItemIndices({indexA, indexB}) {
-    let itemA = this.buildOrder[indexA];
-    this.buildOrder[indexA] = this.buildOrder[indexB];
-    this.buildOrder[indexB] = itemA;
+  setItemAtIndex({item, index}) {
+    this.buildOrder[index] = item;
+    let last = this.buildOrder.length - 1
+    if (this.buildOrder[last].id !== 'plus') {
+      this.buildOrder.push(staticApi.getItemById('plus'));
+    }
     this.emitChange();
   }
 
@@ -106,5 +99,6 @@ ChampionStore.handlers[ChampionActions.SET_GLYPH] = 'setGlyph';
 ChampionStore.handlers[ChampionActions.ADD_ITEM] = 'addItem';
 ChampionStore.handlers[ChampionActions.REMOVE_ITEM_INDEX] = 'removeItemIndex';
 ChampionStore.handlers[ChampionActions.SWAP_ITEM_INDICES] = 'swapItemIndices';
+ChampionStore.handlers[ChampionActions.SET_ITEM_AT_INDEX] = 'setItemAtIndex';
 
 export default ChampionStore;

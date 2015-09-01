@@ -6,12 +6,12 @@ import { connectToStores } from 'fluxible-addons-react';
 class RunePage extends React.Component {
   render() {
     let page = this.props.runePage;
-    return (<div>
-      Quints: <RuneIcons runes={page.quints}/>
-      Marks: <RuneIcons runes={page.marks}/>
-      Glyphs: <RuneIcons runes={page.glyphs}/>
-      Seals: <RuneIcons runes={page.seals}/>
-    </div>);
+    return (<span className="rune-page">
+      <RuneIcons runes={page.quints}/>
+      <RuneIcons runes={page.marks}/>
+      <RuneIcons runes={page.glyphs}/>
+      <RuneIcons runes={page.seals}/>
+    </span>);
   }
 }
 

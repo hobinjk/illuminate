@@ -24,7 +24,7 @@ var webpackConfig = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loaders: ['react-hot', 'babel?cacheDirectory']
+        loaders: ['react-hot', 'babel']
       },
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'file' }
     ]

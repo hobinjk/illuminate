@@ -1,27 +1,22 @@
 import React from 'react';
 import staticApi from '../static/api';
-import ChampionPicker from './ItemPicker';
-import ChampionStore from '../stores/ChampionStore';
-import { connectToStores } from 'fluxible-addons-react';
 
 class ChampionIcon extends React.Component {
-  showPicker(event) {
-    console.log(event.target);
-    this.picker.setState({visible: true, target: event.target});
+  constructor(props) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
   }
+
+  onClick(event) {
+    this.props.onClick(event, this.props.champion);
+  }
+
   render() {
-    this.picker = (
-      <ChampionPicker />
-    );
-    return (<div>
-      <img src={staticApi.getIcon(this.props.champion)} className="icon champion-icon" onClick={this.showPicker}/>;
-      {this.picker}
-    </div>);
+    return <img src={staticApi.getIcon(this.props.champion)}
+                title={this.props.champion.name}
+                alt={this.props.champion.name}
+                className="icon champion-icon" onClick={this.onClick}/>;
   }
 }
-
-ChampionIcon = connectToStores(ChampionIcon, [ChampionStore], (context, props) => ({
-  champion: context.getStore(ChampionStore).getChampion()
-}))
 
 export default ChampionIcon;
