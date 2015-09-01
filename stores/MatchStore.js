@@ -19,21 +19,50 @@ class MatchStore extends BaseStore {
   }
 
   getGoldData() {
+    // Based off a random Gold player's game
+    function goldPerMin(minute) {
+      let gold = 228;
+      if (minute < 10) {
+        return gold;
+      }
+      gold += 443.5;
+      if (minute < 20) {
+        return gold;
+      }
+      gold += 435.2;
+      if (minute < 30) {
+        return gold;
+      }
+      return gold + 400;
+    }
     let gold = 0;
     let data = [];
-    for (var i = 0; i < 40; i++) {
+    for (var i = 0; i < 45; i++) {
       data.push(gold);
-      gold += 500;
+      gold += goldPerMin(i);
     }
     return data;
   }
 
   getXpData() {
-    let gold = 0;
+    function xpPerMin(minute) {
+      if (minute < 10) {
+        return 310;
+      }
+      if (minute < 20) {
+        return 310 + 607;
+      }
+      if (minute < 30) {
+        return 310 + 607 + 540;
+      }
+      return 310 + 607 + 540 + 588;
+    }
+
+    let xp = 0;
     let data = [];
     for (var i = 0; i < 40; i++) {
-      data.push(gold);
-      gold += 500;
+      data.push(xp);
+      xp += xpPerMin(i);
     }
     return data;
   }
