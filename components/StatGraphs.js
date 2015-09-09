@@ -14,7 +14,7 @@ class StatGraphs extends React.Component {
   componentDidMount() {
     let graphContainer = React.findDOMNode(this.refs.graphContainer);
     let data = this.props.data;
-    this.createGraph(graphContainer, data);
+    this.createGraph(graphContainer);
     this.updateGraph(graphContainer, data);
   }
 
@@ -26,33 +26,26 @@ class StatGraphs extends React.Component {
 
   componentWillUnmount() {
     let graphContainer = React.findDOMNode(this.refs.graphContainer);
+    this.updateGraph(graphContainer, []);
     this.destroyGraph(graphContainer);
   }
 
 
-  createGraph(graphContainer, data) {
-    if (!data || !data.length) {
-      return;
-    }
-
+  createGraph(graphContainer) {
     let margin = 8;
     let width = graphContainer.getBoundingClientRect().width - margin * 2;
     let height = graphContainer.getBoundingClientRect().height - margin * 2;
-
-    let xScale = d3.scale.linear().range([0, width]);
-    xScale.domain([0, d3.max(data[0].data, d => d.x)]);
-
 
     let svg = d3.select(graphContainer).append('svg')
       .attr('width', width + 2 * margin)
       .attr('height', height + 2 * margin)
       .append('g')
+      .attr('class', 'series-lines')
       .attr('transform', 'translate(' + margin + ',' + margin + ')');
   }
 
-  updateGraph(graphContainer, data) {
-    if (!data || !data.length) {
-      console.log('No data for update');
+  updateGraph(graphContainer, seriesList) {
+    if (!seriesList || !seriesList.length) {
       return;
     }
 
@@ -61,7 +54,7 @@ class StatGraphs extends React.Component {
     let height = graphContainer.getBoundingClientRect().height - margin * 2;
 
     let xScale = d3.scale.linear().range([0, width]);
-    xScale.domain([0, d3.max(data[0].data, d => d.x)]);
+    xScale.domain([d3.min(seriesList[0].data, d => d.x), d3.max(seriesList[0].data, d => d.x)]);
 
     let colorScale = d3.scale.category20();
 
@@ -71,8 +64,7 @@ class StatGraphs extends React.Component {
     let rangedData = ranges.map(range => []);
     let rangedScaleMap = {};
 
-    data.forEach(series => {
-      console.log('Processing ' + series.name);
+    seriesList.forEach(series => {
       let maxValue = d3.max(series.data, d => d.y);
       for (let i = ranges.length - 1; i >= 0; i--) {
         if (ranges[i] <= maxValue) {
@@ -84,7 +76,7 @@ class StatGraphs extends React.Component {
     });
 
     for (let i = 0; i < ranges.length; i++) {
-      rangedScales[i].domain([d3.min(rangedData[i], d => d.y), d3.max(rangedData[i], d => d.y)]);
+      rangedScales[i].domain([0, d3.max(rangedData[i], d => d.y)]);
     }
 
     function getScale(series) {
@@ -100,10 +92,11 @@ class StatGraphs extends React.Component {
                    (series.data);
     }
 
+
     let seriesLines = d3.select(graphContainer)
-      .select('svg')
-      .selectAll('path.series-line')
-      .data(data);
+      .selectAll('.series-lines')
+      .selectAll('.series-line')
+      .data(seriesList);
 
     seriesLines.enter()
       .append('path')
@@ -123,16 +116,19 @@ class StatGraphs extends React.Component {
       .append('div')
       .attr('class', 'stat-graphs-legend');
 
+
     let legend = legendContainer.selectAll('p')
-      .data(data)
-      .enter()
-        .append('div');
-    legend.append('span')
-          .attr('class', 'stat-graphs-legend-box')
-          .style('background-color', function(d) { return colorScale(d.name); });
-    legend.append('span')
-          .text(function(d) { return d.name; })
-          .style('color', function(d) { return colorScale(d.name); });
+      .data(seriesList);
+
+    let legendDiv = legend.enter().append('div');
+    legendDiv.append('span')
+      .attr('class', 'stat-graphs-legend-box')
+      .style('background-color', function(d) { return colorScale(d.name); });
+    legendDiv.append('span')
+      .text(function(d) { return d.name; })
+      .style('color', function(d) { return colorScale(d.name); });
+
+    legend.exit().remove();
   }
 
   destroyGraph(graphContainer) {
