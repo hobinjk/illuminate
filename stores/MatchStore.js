@@ -37,9 +37,10 @@ class MatchStore extends BaseStore {
     }
     let gold = 0;
     let data = [];
-    for (var i = 0; i < 45; i++) {
+    let dt = 0.05;
+    for (var i = 0; i < 45 / dt; i++) {
       data.push(gold);
-      gold += goldPerMin(i);
+      gold += goldPerMin(i) * dt;
     }
     return data;
   }
@@ -60,9 +61,10 @@ class MatchStore extends BaseStore {
 
     let xp = 0;
     let data = [];
-    for (var i = 0; i < 40; i++) {
+    let dt = 0.05;
+    for (var i = 0; i < 45 / dt; i++) {
       data.push(xp);
-      xp += xpPerMin(i);
+      xp += xpPerMin(i) * dt;
     }
     return data;
   }
