@@ -54,7 +54,7 @@ class StatGraphs extends React.Component {
     let height = graphContainer.getBoundingClientRect().height - margin * 2;
 
     let xScale = d3.scale.linear().range([0, width]);
-    xScale.domain([d3.min(seriesList[0].data, d => d.x), d3.max(seriesList[0].data, d => d.x)]);
+    xScale.domain([d3.min(seriesList[0].data, d => d.time), d3.max(seriesList[0].data, d => d.time)]);
 
     let colorScale = d3.scale.category20();
 
@@ -65,7 +65,7 @@ class StatGraphs extends React.Component {
     let rangedScaleMap = {};
 
     seriesList.forEach(series => {
-      let maxValue = d3.max(series.data, d => d.y);
+      let maxValue = d3.max(series.data, d => d.value);
       for (let i = ranges.length - 1; i >= 0; i--) {
         if (ranges[i] <= maxValue) {
           rangedData[i] = rangedData[i].concat(series.data);
@@ -76,7 +76,7 @@ class StatGraphs extends React.Component {
     });
 
     for (let i = 0; i < ranges.length; i++) {
-      rangedScales[i].domain([0, d3.max(rangedData[i], d => d.y)]);
+      rangedScales[i].domain([0, d3.max(rangedData[i], d => d.value)]);
     }
 
     function getScale(series) {
@@ -87,8 +87,8 @@ class StatGraphs extends React.Component {
       let yScale = getScale(series);
 
       return d3.svg.line()
-                   .x(function(d) { return xScale(d.x); })
-                   .y(function(d) { return yScale(d.y); })
+                   .x(function(d) { return xScale(d.time); })
+                   .y(function(d) { return yScale(d.value); })
                    (series.data);
     }
 

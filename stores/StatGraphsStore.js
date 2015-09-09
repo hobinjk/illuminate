@@ -41,7 +41,7 @@ class StatGraphsStore extends BaseStore {
         if (!graphData[name]) {
           graphData[name] = [];
         }
-        graphData[name].push({x: time, y: value});
+        graphData[name].push({time: time, value: value});
       }
     }
 
