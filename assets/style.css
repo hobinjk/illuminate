@@ -37,7 +37,8 @@ body {
 }
 
 .picker {
-  max-width: 288px;
+  max-width: 480px;
+  max-height: 640px;
   overflow: scroll;
   position: absolute;
   z-index: 100;
