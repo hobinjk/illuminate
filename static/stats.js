@@ -48,6 +48,10 @@ function calculateAtState(state, champion, runePage, buildOrder) {
         }
       }
     }
+    if (gold < goldCost) {
+      // Can't afford item
+      break;
+    }
     gold -= goldCost;
     inventory.push(item);
     inventory = inventory.filter((a) => {
