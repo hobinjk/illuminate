@@ -1,8 +1,6 @@
 import React from 'react';
-import Champion from './Champion';
-import BuildOrder from './BuildOrder';
-import RunePage from './RunePage';
 import { provideContext } from 'fluxible-addons-react';
+import ChampionBar from './ChampionBar';
 import StatGraphs from './StatGraphs';
 
 class Application extends React.Component {
@@ -18,9 +16,7 @@ class Application extends React.Component {
           </div>
         </div>
         <div id="application">
-          <Champion />
-          <BuildOrder />
-          <RunePage />
+          <ChampionBar />
           <StatGraphs/>
         </div>
       </div>
