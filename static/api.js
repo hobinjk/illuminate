@@ -46,7 +46,7 @@ let getItems = generateCachedEnumerator(staticItemData, function(item) {
 });
 
 let getChampions = generateCachedEnumerator(staticChampionData);
-let getRunes = generateCachedEnumerator(staticChampionData);
+let getRunes = generateCachedEnumerator(staticRuneData);
 
 function getQuints() {
   return getRunes().filter(function(data) {

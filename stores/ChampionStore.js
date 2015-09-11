@@ -28,23 +28,27 @@ class ChampionStore extends BaseStore {
     this.emitChange();
   }
 
-  setQuint({index, quint}) {
-    this.runePage.quints[index] = quint;
-    this.emitChange();
-  }
-
-  setMark({index, mark}) {
-    this.runePage.marks[index] = mark;
-    this.emitChange();
-  }
-
-  setSeal({index, seal}) {
-    this.runePage.seals[index] = seal;
-    this.emitChange();
-  }
-
-  setGlyph({index, glyph}) {
-    this.runePage.glyphs[index] = glyph;
+  setRuneAtIndex({index, rune}) {
+    let runes = [];
+    switch (rune.rune.type) {
+    case 'black':
+      runes = this.runePage.quints;
+      break;
+    case 'red':
+      runes = this.runePage.marks;
+      break;
+    case 'blue':
+      runes = this.runePage.glyphs;
+      break;
+    case 'yellow':
+      runes = this.runePage.seals;
+      break;
+    default:
+      console.warn('Unknown rune type encountered');
+      return;
+    }
+    console.log('runes[' + index + ']', rune);
+    runes[index] = rune;
     this.emitChange();
   }
 
@@ -92,10 +96,7 @@ function getEmptyRunePage() {
 ChampionStore.storeName = 'ChampionStore';
 ChampionStore.handlers = {};
 ChampionStore.handlers[ChampionActions.SET_CHAMPION] = 'setChampion';
-ChampionStore.handlers[ChampionActions.SET_QUINT] = 'setQuint';
-ChampionStore.handlers[ChampionActions.SET_MARK] = 'setMark';
-ChampionStore.handlers[ChampionActions.SET_SEAL] = 'setSeal';
-ChampionStore.handlers[ChampionActions.SET_GLYPH] = 'setGlyph';
+ChampionStore.handlers[ChampionActions.SET_RUNE_AT_INDEX] = 'setRuneAtIndex';
 ChampionStore.handlers[ChampionActions.ADD_ITEM] = 'addItem';
 ChampionStore.handlers[ChampionActions.REMOVE_ITEM_INDEX] = 'removeItemIndex';
 ChampionStore.handlers[ChampionActions.SWAP_ITEM_INDICES] = 'swapItemIndices';

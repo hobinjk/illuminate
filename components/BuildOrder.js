@@ -19,7 +19,7 @@ class BuildOrder extends React.Component {
     let icons = [];
     for (let i = 0; i < this.props.buildOrder.length; i++) {
       let item = this.props.buildOrder[i];
-      icons.push(<ItemIcon index={i} item={item} onClick={this.showPicker}/>);
+      icons.push(<ItemIcon key={item.id + '_' + i} index={i} item={item} onClick={this.showPicker}/>);
     }
     return (<span className="build-order">
       {icons}

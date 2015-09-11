@@ -32,7 +32,7 @@ class StatGraphs extends React.Component {
 
 
   createGraph(graphContainer) {
-    let margin = 8;
+    let margin = 0;
     let width = graphContainer.getBoundingClientRect().width - margin * 2;
     let height = graphContainer.getBoundingClientRect().height - margin * 2;
 
@@ -135,17 +135,27 @@ class StatGraphs extends React.Component {
   }
 
   render() {
-    let style = {
-      width: '100%',
-      height: '640px'
-    };
-    return <div style={style} className="stat-graphs-container" ref="graphContainer">
+    return <div className="stat-graphs-container" ref="graphContainer">
     </div>;
   }
 }
 
-StatGraphs = connectToStores(StatGraphs, [StatGraphsStore], (context, props) => ({
-  data: context.getStore(StatGraphsStore).getData()
-}));
+StatGraphs = connectToStores(StatGraphs, [StatGraphsStore], (context, props) => {
+  let raw = context.getStore(StatGraphsStore).getData();
+  if (raw && raw.sort) {
+    raw.sort(function(a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+  return {
+    data: raw
+  };
+});
 
 export default StatGraphs;

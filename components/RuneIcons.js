@@ -3,19 +3,22 @@ import RunePicker from './RunePicker';
 import RuneIcon from './RuneIcon';
 
 class RuneIcons extends React.Component {
-  showPicker(event) {
-    this.picker.setState({visible: true, target: event.target});
+  constructor(props) {
+    super(props);
+    this.showPicker = this.showPicker.bind(this);
   }
+
+  showPicker(event, rune, index) {
+    this.refs.picker.setState({visible: true, target: event.target, rune: rune, index: index});
+  }
+
   render() {
-    let icons = this.props.runes.map(rune => {
-      return <RuneIcon rune={rune} onClick={this.showPicker}/>;
+    let icons = this.props.runes.map((rune, i) => {
+      return <RuneIcon key={rune.id + '_' + i} index={i} rune={rune} onClick={this.showPicker}/>;
     });
-    this.picker = (
-      <RunePicker />
-    );
     return (<div className="rune-icons">
       {icons}
-      {this.picker}
+      <RunePicker ref="picker"/>
     </div>);
   }
 }

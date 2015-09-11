@@ -21,7 +21,7 @@ body {
   z-index: 50;
 }
 
-.rune-icon {
+.rune-icons > .rune-icon {
   display: block;
 }
 
@@ -37,11 +37,12 @@ body {
 }
 
 .picker {
-  max-width: 480px;
+  width: 384px;
   max-height: 640px;
   overflow: scroll;
   position: absolute;
   z-index: 100;
+  background-color: rgba(10, 10, 10, 0.2);
 }
 
 #topbar {
@@ -76,68 +77,13 @@ body {
 
 .stat-graphs-container {
   position: relative;
+  width: 100%;
+  height: 640px;
 }
 
 .stat-graphs-legend {
   position: absolute;
   top: 5px;
   left: 5px;
-  background-color: rgba(10, 10, 10, 0.1);
-}
-
-/* From d3-tip library */
-.d3-tip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
-  pointer-events: none;
-}
-
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  position: absolute;
-  pointer-events: none;
-}
-
-/* Northward tooltips */
-.d3-tip.n:after {
-  content: "\25BC";
-  margin: -1px 0 0 0;
-  top: 100%;
-  left: 0;
-  text-align: center;
-}
-
-/* Eastward tooltips */
-.d3-tip.e:after {
-  content: "\25C0";
-  margin: -4px 0 0 0;
-  top: 50%;
-  left: -8px;
-}
-
-/* Southward tooltips */
-.d3-tip.s:after {
-  content: "\25B2";
-  margin: 0 0 1px 0;
-  top: -8px;
-  left: 0;
-  text-align: center;
-}
-
-/* Westward tooltips */
-.d3-tip.w:after {
-  content: "\25B6";
-  margin: -4px 0 0 -1px;
-  top: 50%;
-  left: 100%;
+  background-color: rgba(10, 10, 10, 0.5);
 }

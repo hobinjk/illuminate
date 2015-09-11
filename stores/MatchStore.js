@@ -21,19 +21,16 @@ class MatchStore extends BaseStore {
   getGoldData() {
     // Based off a random Gold player's game
     function goldPerMin(minute) {
-      let gold = 228;
       if (minute < 10) {
-        return gold;
+        return 228;
       }
-      gold += 443.5;
       if (minute < 20) {
-        return gold;
+        return 443.5;
       }
-      gold += 435.2;
       if (minute < 30) {
-        return gold;
+        return 435.2;
       }
-      return gold + 400;
+      return 400;
     }
     let gold = 0;
     let data = [];
@@ -51,12 +48,12 @@ class MatchStore extends BaseStore {
         return 310;
       }
       if (minute < 20) {
-        return 310 + 607;
+        return 607;
       }
       if (minute < 30) {
-        return 310 + 607 + 540;
+        return 540;
       }
-      return 310 + 607 + 540 + 588;
+      return 588;
     }
 
     let xp = 0;
