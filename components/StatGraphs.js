@@ -1,14 +1,21 @@
 import React from 'react';
 import StatGraphsStore from '../stores/StatGraphsStore';
+import StatGraphsLegend from './StatGraphsLegend';
 import { connectToStores } from 'fluxible-addons-react';
 import statsApi from '../static/stats';
 import _ from 'lodash';
 import d3 from 'd3';
-import d3Tip from 'd3-tip';
 
 class StatGraphs extends React.Component {
+  static contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+  };
+
   constructor(props) {
     super(props);
+    this.state = {
+      colorScale: d3.scale.category20()
+    };
   }
 
   componentDidMount() {
@@ -56,7 +63,6 @@ class StatGraphs extends React.Component {
     let xScale = d3.scale.linear().range([0, width]);
     xScale.domain([d3.min(seriesList[0].data, d => d.time), d3.max(seriesList[0].data, d => d.time)]);
 
-    let colorScale = d3.scale.category20();
 
     // Scale data differently between 0-1, 1-500, and 500 upwards
     let ranges = [0, 1, 500];
@@ -92,6 +98,8 @@ class StatGraphs extends React.Component {
                    (series.data);
     }
 
+    let colorScale = this.state.colorScale;
+
 
     let seriesLines = d3.select(graphContainer)
       .selectAll('.series-lines')
@@ -102,46 +110,40 @@ class StatGraphs extends React.Component {
       .append('path')
       .attr('class', 'series-line')
       .attr('fill', 'none')
-      .attr('stroke', function(series) {
-        return colorScale(series.name);
-      })
-      .attr('stroke-width', 2);
+            .attr('stroke-width', 2);
 
     seriesLines.transition()
-      .attr('d', makeSeriesLine);
+      .attr('d', makeSeriesLine)
+      .attr('stroke', series => {
+        if (this.props.visible[series.name]) {
+          return colorScale(series.name);
+        } else {
+          return 'rgba(0,0,0,0)';
+        }
+      });
+
 
     seriesLines.exit().remove();
-
-    let legendContainer = d3.select(graphContainer)
-      .append('div')
-      .attr('class', 'stat-graphs-legend');
-
-
-    let legend = legendContainer.selectAll('p')
-      .data(seriesList);
-
-    let legendDiv = legend.enter().append('div');
-    legendDiv.append('span')
-      .attr('class', 'stat-graphs-legend-box')
-      .style('background-color', function(d) { return colorScale(d.name); });
-    legendDiv.append('span')
-      .text(function(d) { return d.name; })
-      .style('color', function(d) { return colorScale(d.name); });
-
-    legend.exit().remove();
   }
 
   destroyGraph(graphContainer) {
   }
 
   render() {
+    let names = [];
+    if (this.props.data && this.props.data.map) {
+      names = this.props.data.map(data => data.name);
+    }
+
     return <div className="stat-graphs-container" ref="graphContainer">
+      <StatGraphsLegend names={names} visible={this.props.visible} colorScale={this.state.colorScale}/>
     </div>;
   }
 }
 
 StatGraphs = connectToStores(StatGraphs, [StatGraphsStore], (context, props) => {
-  let raw = context.getStore(StatGraphsStore).getData();
+  let store = context.getStore(StatGraphsStore);
+  let raw = store.getData();
   if (raw && raw.sort) {
     raw.sort(function(a, b) {
       if (a.name < b.name) {
@@ -154,7 +156,8 @@ StatGraphs = connectToStores(StatGraphs, [StatGraphsStore], (context, props) => 
     });
   }
   return {
-    data: raw
+    data: raw,
+    visible: store.getVisible()
   };
 });
 

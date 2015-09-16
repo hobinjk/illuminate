@@ -7,7 +7,8 @@ class StatGraphsStore extends BaseStore {
   constructor(dispatcher) {
     super(dispatcher);
     this.dispatcher = dispatcher;
-    this.data = {};
+    this.data = [];
+    this.visible = {};
   }
 
   update() {
@@ -47,6 +48,19 @@ class StatGraphsStore extends BaseStore {
 
     this.data = [];
     for (let name in graphData) {
+      if (typeof(this.visible[name]) === 'undefined') {
+        // Default to showing only if the data changes
+        let changing = false;
+        let lastValue = graphData[name][0].value;
+        for (let data of graphData[name]) {
+          if (data.value - lastValue > 0.0001) {
+            changing = true;
+            break;
+          }
+          lastValue = data.value;
+        }
+        this.visible[name] = changing;
+      }
       this.data.push({name: name, data: graphData[name]});
     }
     this.emitChange();
@@ -56,6 +70,15 @@ class StatGraphsStore extends BaseStore {
 
   getData() {
     return this.data;
+  }
+
+  getVisible() {
+    return this.visible;
+  }
+
+  toggleStatVisibility({name}) {
+    this.visible[name] = !this.visible[name];
+    this.emitChange();
   }
 
   dehydrate() {

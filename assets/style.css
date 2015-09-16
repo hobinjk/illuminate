@@ -87,3 +87,19 @@ body {
   left: 5px;
   background-color: rgba(10, 10, 10, 0.5);
 }
+
+.stat-graphs-legend-item {
+  cursor: pointer;
+  user-select: none;
+}
+
+.stat-graphs-legend-box {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: var(color);
+}
+
+.stat-graphs-legend-item-hidden {
+  color: rgba(200, 200, 200, 0.5);
+}
