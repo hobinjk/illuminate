@@ -9,6 +9,7 @@ class StatGraphsStore extends BaseStore {
     this.dispatcher = dispatcher;
     this.data = [];
     this.visible = {};
+    this.hoverEvent = null;
   }
 
   update() {
@@ -66,7 +67,18 @@ class StatGraphsStore extends BaseStore {
     this.emitChange();
   }
 
+  isHoverActive() {
+    return !!this.hoverEvent;
+  }
 
+  setHoverEvent({hoverEvent}) {
+    this.hoverEvent = hoverEvent;
+    this.emitChange();
+  }
+
+  getHoverEvent() {
+    return this.hoverEvent;
+  }
 
   getData() {
     return this.data;
@@ -79,6 +91,24 @@ class StatGraphsStore extends BaseStore {
   toggleStatVisibility({name}) {
     this.visible[name] = !this.visible[name];
     this.emitChange();
+  }
+
+  getVisibleStatsAtTime(time) {
+    let allStats = this.getData();
+    let statsAtTime = [];
+    for (let statData of allStats) {
+      let lastValue = statData.data[0];
+      if (!this.visible[statData.name]) {
+        continue;
+      }
+      for (let statValue of statData.data) {
+        if (statValue.time < time && lastValue.time < statValue.time) {
+          lastValue = statValue;
+        }
+      }
+      statsAtTime.push({name: statData.name, value: lastValue.value});
+    }
+    return statsAtTime;
   }
 
   dehydrate() {
@@ -98,7 +128,8 @@ StatGraphsStore.storeName = 'StatGraphsStore';
 
 StatGraphsStore.handlers = {
   'default': 'update',
-  'TOGGLE_STAT_VISIBILITY': 'toggleStatVisibility'
+  'TOGGLE_STAT_VISIBILITY': 'toggleStatVisibility',
+  'SET_STAT_HOVER_EVENT': 'setHoverEvent'
 };
 
 export default StatGraphsStore;

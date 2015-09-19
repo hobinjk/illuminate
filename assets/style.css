@@ -103,3 +103,13 @@ body {
 .stat-graphs-legend-item-hidden {
   color: rgba(200, 200, 200, 0.5);
 }
+
+.stat-graphs-tooltip {
+}
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 8px;
+  border-radius: 8px;
+
+}

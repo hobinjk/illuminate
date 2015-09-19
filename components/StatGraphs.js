@@ -1,8 +1,11 @@
 import React from 'react';
 import StatGraphsStore from '../stores/StatGraphsStore';
 import StatGraphsLegend from './StatGraphsLegend';
+import StatGraphsTooltip from './StatGraphsTooltip';
 import { connectToStores } from 'fluxible-addons-react';
 import statsApi from '../static/stats';
+import updateStatGraphsHover from '../actions/updateStatGraphsHover';
+import endStatGraphsHover from '../actions/endStatGraphsHover';
 import _ from 'lodash';
 import d3 from 'd3';
 
@@ -39,16 +42,18 @@ class StatGraphs extends React.Component {
 
 
   createGraph(graphContainer) {
-    let margin = 0;
-    let width = graphContainer.getBoundingClientRect().width - margin * 2;
-    let height = graphContainer.getBoundingClientRect().height - margin * 2;
+    let width = graphContainer.getBoundingClientRect().width;
+    let height = graphContainer.getBoundingClientRect().height;
 
     let svg = d3.select(graphContainer).append('svg')
-      .attr('width', width + 2 * margin)
-      .attr('height', height + 2 * margin)
+      .attr('width', width)
+      .attr('height', height)
       .append('g')
-      .attr('class', 'series-lines')
-      .attr('transform', 'translate(' + margin + ',' + margin + ')');
+      .attr('class', 'series-lines');
+
+    d3.select(graphContainer).on('mouseleave', () => {
+      this.context.executeAction(endStatGraphsHover, {});
+    });
   }
 
   updateGraph(graphContainer, seriesList) {
@@ -56,9 +61,8 @@ class StatGraphs extends React.Component {
       return;
     }
 
-    let margin = 8;
-    let width = graphContainer.getBoundingClientRect().width - margin * 2;
-    let height = graphContainer.getBoundingClientRect().height - margin * 2;
+    let width = graphContainer.getBoundingClientRect().width;
+    let height = graphContainer.getBoundingClientRect().height;
 
     let xScale = d3.scale.linear().range([0, width]);
     xScale.domain([d3.min(seriesList[0].data, d => d.time), d3.max(seriesList[0].data, d => d.time)]);
@@ -101,6 +105,23 @@ class StatGraphs extends React.Component {
     let colorScale = this.state.colorScale;
 
 
+    let nextAllowedMouseMove = Date.now();
+    let mouseMoveDelay = 33; // 30fps-ish
+    d3.select(graphContainer).on('mousemove', () => {
+      if (Date.now() < nextAllowedMouseMove) {
+        return;
+      }
+      let mouse = d3.mouse(graphContainer);
+      this.context.executeAction(updateStatGraphsHover, {hoverEvent: {
+        pageX: d3.event.pageX,
+        pageY: d3.event.pageY,
+        localX: mouse[0],
+        localY: mouse[1],
+        time: xScale.invert(mouse[0])
+      }});
+      nextAllowedMouseMove = Date.now() + mouseMoveDelay;
+    });
+
     let seriesLines = d3.select(graphContainer)
       .selectAll('.series-lines')
       .selectAll('.series-line')
@@ -115,11 +136,10 @@ class StatGraphs extends React.Component {
     seriesLines.transition()
       .attr('d', makeSeriesLine)
       .attr('stroke', series => {
-        if (this.props.visible[series.name]) {
-          return colorScale(series.name);
-        } else {
-          return 'rgba(0,0,0,0)';
-        }
+        return colorScale(series.name);
+      })
+      .style('opacity', series => {
+        return this.props.visible[series.name] ? 1 : 0;
       });
 
 
@@ -136,6 +156,7 @@ class StatGraphs extends React.Component {
     }
 
     return <div className="stat-graphs-container" ref="graphContainer">
+      <StatGraphsTooltip colorScale={this.state.colorScale}/>
       <StatGraphsLegend names={names} visible={this.props.visible} colorScale={this.state.colorScale}/>
     </div>;
   }
