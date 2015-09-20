@@ -89,26 +89,83 @@ function applyStats(baseStats, stats) {
   }
 }
 
+const staticStatsData = {
+  magicdamage: {
+    name: 'Magic Damage',
+    color: '#1f77b4'
+  },
+  attackspeed: {
+    name: 'Attack Speed Bonus',
+    color: '#aec7e8'
+  },
+  armor: {
+    name: 'Armor',
+    color: '#ff7f0e'
+  },
+  attackdamage: {
+    name: 'Attack Damage',
+    color: '#ffbb78'
+  },
+  crit: {
+    name: 'Crit Chance',
+    color: '#2ca02c'
+  },
+  hp: {
+    name: 'Health',
+    color: '#98df8a'
+  },
+  hpregen: {
+    name: 'Health Regen',
+    color: '#d62728'
+  },
+  mp: {
+    name: 'Mana',
+    color: '#ff9896'
+  },
+  mpregen: {
+    name: 'Mana Regen',
+    color: '#9467bd'
+  },
+  spellblock: {
+    name: 'Magic Resist',
+    color: '#c5b0d5'
+  },
+  attackspersecond: {
+    name: 'Attacks Per Second',
+    color: '#8c564b'
+  },
+  damagepersecond: {
+    name: 'Expected DPS',
+    color: '#c49c94'
+  },
+  level: {
+    name: 'Level',
+    color: '#e377c2'
+  },
+  gold: {
+    name: 'Gold',
+    color: '#f7b6d2'
+  }
+};
 function getName(key) {
-  let keyNames = {
-    magicdamage: 'Magic Damage',
-    attackspeed: 'Attack Speed Bonus',
-    armor: 'Armor',
-    attackdamage: 'Attack Damage',
-    crit: 'Crit Chance',
-    hp: 'Health',
-    hpregen: 'Health Regen',
-    mp: 'Mana',
-    mpregen: 'Mana Regen',
-    spellblock: 'Magic Resist',
-    attackspersecond: 'Attacks Per Second',
-    damagepersecond: 'Expected DPS'
-  };
-  return keyNames[key];
+  let data = staticStatsData[key];
+  if (!data) {
+    return null;
+  }
+  return data.name;
+}
+
+function getColor(key) {
+  let data = staticStatsData[key];
+  if (!data) {
+    return null;
+  }
+  return data.color;
 }
 
 export default {
   calculateFinal,
   calculateAtState,
-  getName
+  getName,
+  getColor
 };

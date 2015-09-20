@@ -22,8 +22,6 @@ class StatGraphsStore extends BaseStore {
     let goldData = matchStore.getGoldData();
     let xpData = matchStore.getXpData();
 
-    console.log(champion, buildOrder, runePage, goldData, xpData);
-
     let graphData = {};
 
     let timeData = [];
@@ -33,37 +31,45 @@ class StatGraphsStore extends BaseStore {
 
     for (let [xp, gold, time] of _.zipWith(xpData, goldData, timeData)) {
       let rawStats = statsApi.calculateAtState({xp: xp, gold: gold}, champion, runePage, buildOrder);
-      let stats = [];
       for (let key in rawStats) {
-        let name = statsApi.getName(key);
-        if (!name) {
+        if (!statsApi.getName(key)) {
           continue;
         }
         let value = Math.round(rawStats[key] * 100) / 100;
-        if (!graphData[name]) {
-          graphData[name] = [];
+        if (!graphData[key]) {
+          graphData[key] = [];
         }
-        graphData[name].push({time: time, value: value});
+        graphData[key].push({time: time, value: value});
       }
     }
 
     this.data = [];
-    for (let name in graphData) {
-      if (typeof(this.visible[name]) === 'undefined') {
+    for (let key in graphData) {
+      if (typeof(this.visible[key]) === 'undefined') {
         // Default to showing only if the data changes
         let changing = false;
-        let lastValue = graphData[name][0].value;
-        for (let data of graphData[name]) {
+        let lastValue = graphData[key][0].value;
+        for (let data of graphData[key]) {
           if (data.value - lastValue > 0.0001) {
             changing = true;
             break;
           }
           lastValue = data.value;
         }
-        this.visible[name] = changing;
+        this.visible[key] = changing;
       }
-      this.data.push({name: name, data: graphData[name]});
+      this.data.push({key: key, data: graphData[key]});
     }
+
+    this.data.sort(function(a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
     this.emitChange();
   }
 
@@ -88,8 +94,8 @@ class StatGraphsStore extends BaseStore {
     return this.visible;
   }
 
-  toggleStatVisibility({name}) {
-    this.visible[name] = !this.visible[name];
+  toggleStatVisibility({key}) {
+    this.visible[key] = !this.visible[key];
     this.emitChange();
   }
 
@@ -98,7 +104,7 @@ class StatGraphsStore extends BaseStore {
     let statsAtTime = [];
     for (let statData of allStats) {
       let lastValue = statData.data[0];
-      if (!this.visible[statData.name]) {
+      if (!this.visible[statData.key]) {
         continue;
       }
       for (let statValue of statData.data) {
@@ -106,7 +112,7 @@ class StatGraphsStore extends BaseStore {
           lastValue = statValue;
         }
       }
-      statsAtTime.push({name: statData.name, value: lastValue.value});
+      statsAtTime.push({key: statData.key, value: lastValue.value});
     }
     return statsAtTime;
   }

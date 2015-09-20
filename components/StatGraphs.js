@@ -14,13 +14,6 @@ class StatGraphs extends React.Component {
     executeAction: React.PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      colorScale: d3.scale.category20()
-    };
-  }
-
   componentDidMount() {
     let graphContainer = React.findDOMNode(this.refs.graphContainer);
     let data = this.props.data;
@@ -79,7 +72,7 @@ class StatGraphs extends React.Component {
       for (let i = ranges.length - 1; i >= 0; i--) {
         if (ranges[i] <= maxValue) {
           rangedData[i] = rangedData[i].concat(series.data);
-          rangedScaleMap[series.name] = rangedScales[i];
+          rangedScaleMap[series.key] = rangedScales[i];
           break;
         }
       }
@@ -90,7 +83,7 @@ class StatGraphs extends React.Component {
     }
 
     function getScale(series) {
-      return rangedScaleMap[series.name];
+      return rangedScaleMap[series.key];
     }
 
     function makeSeriesLine(series) {
@@ -101,9 +94,6 @@ class StatGraphs extends React.Component {
                    .y(function(d) { return yScale(d.value); })
                    (series.data);
     }
-
-    let colorScale = this.state.colorScale;
-
 
     let nextAllowedMouseMove = Date.now();
     let mouseMoveDelay = 33; // 30fps-ish
@@ -136,10 +126,10 @@ class StatGraphs extends React.Component {
     seriesLines.transition()
       .attr('d', makeSeriesLine)
       .attr('stroke', series => {
-        return colorScale(series.name);
+        return statsApi.getColor(series.key);
       })
       .style('opacity', series => {
-        return this.props.visible[series.name] ? 1 : 0;
+        return this.props.visible[series.key] ? 1 : 0;
       });
 
 
@@ -150,34 +140,17 @@ class StatGraphs extends React.Component {
   }
 
   render() {
-    let names = [];
-    if (this.props.data && this.props.data.map) {
-      names = this.props.data.map(data => data.name);
-    }
-
     return <div className="stat-graphs-container" ref="graphContainer">
-      <StatGraphsTooltip colorScale={this.state.colorScale}/>
-      <StatGraphsLegend names={names} visible={this.props.visible} colorScale={this.state.colorScale}/>
+      <StatGraphsTooltip />
+      <StatGraphsLegend />
     </div>;
   }
 }
 
 StatGraphs = connectToStores(StatGraphs, [StatGraphsStore], (context, props) => {
   let store = context.getStore(StatGraphsStore);
-  let raw = store.getData();
-  if (raw && raw.sort) {
-    raw.sort(function(a, b) {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
-  }
   return {
-    data: raw,
+    data: store.getData(),
     visible: store.getVisible()
   };
 });

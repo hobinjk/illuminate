@@ -1,5 +1,6 @@
 import React from 'react';
 import StatGraphsStore from '../stores/StatGraphsStore';
+import statsApi from '../static/stats';
 import { connectToStores } from 'fluxible-addons-react';
 
 class StatGraphsTooltip extends React.Component {
@@ -10,9 +11,10 @@ class StatGraphsTooltip extends React.Component {
     let time = this.props.hoverEvent.time;
     let stats = this.props.statsAtTime;
 
-    let statItems = stats.map(({name, value}) => {
+    let statItems = stats.map(({key, value}) => {
+      let name = statsApi.getName(key);
       let statStyle = {
-        color: this.props.colorScale(name)
+        color: statsApi.getColor(key)
       };
       return <div style={statStyle} className="stat-graphs-tooltip-item">{name}: {value}</div>
     });

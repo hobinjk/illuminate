@@ -47,7 +47,6 @@ class ChampionStore extends BaseStore {
       console.warn('Unknown rune type encountered');
       return;
     }
-    console.log('runes[' + index + ']', rune);
     runes[index] = rune;
     this.emitChange();
   }
