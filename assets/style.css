@@ -107,10 +107,10 @@ body {
 
 .stat-graphs-tooltip {
 }
+
 .tooltip {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.8);
   padding: 8px;
   border-radius: 8px;
-
 }

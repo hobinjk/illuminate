@@ -73,19 +73,31 @@ function getAttacksPerSecond(stats) {
                   (1 + stats.attackspeed / 100));
 }
 
-function applyStats(baseStats, stats) {
-  let flatMods = [
-    ['magicdamage', 'FlatMagicDamageMod'],
-    ['crit', 'FlatCritChanceMod'],
-    ['attackdamage', 'FlatPhysicalDamageMod'],
-    ['hp', 'FlatHPPoolMod'],
-    ['mp', 'FlatMPPoolMod'],
-    ['spellblock', 'FlatSpellBlockMod'],
-    ['attackspeed', 'PercentAttackSpeedMod']
-  ];
+class FlatModifierAdd {
+  constructor(flatModifierStat, baseStat) {
+    this.flatModifierStat = flatModifierStat;
+    this.baseStat = baseStat;
+  }
 
-  for (let [baseStat, statMod] of flatMods) {
-    baseStats[baseStat] += parseFloat(stats[statMod]) || 0;
+  apply(baseStats, stats) {
+    baseStats[this.baseStat] += parseFloat(stats[this.flatModifierStat]) || 0;
+  }
+}
+
+
+const modifiers = [
+  new FlatModifierAdd('FlatMagicDamageMod', 'magicdamage'),
+  new FlatModifierAdd('FlatCritChanceMod', 'crit'),
+  new FlatModifierAdd('FlatPhysicalDamageMod', 'attackdamage'),
+  new FlatModifierAdd('FlatHPPoolMod', 'hp'),
+  new FlatModifierAdd('FlatMPPoolMod', 'mp'),
+  new FlatModifierAdd('FlatSpellBlockMod', 'spellblock'),
+  new FlatModifierAdd('PercentAttackSpeedMod', 'attackspeed')
+];
+
+function applyStats(baseStats, stats) {
+  for (let modifier of modifiers) {
+    modifier.apply(baseStats, stats);
   }
 }
 
@@ -163,9 +175,30 @@ function getColor(key) {
   return data.color;
 }
 
+function getModifierName(key) {
+  switch (key) {
+  case 'FlatMagicDamageMod':
+    return getName('magicdamage');
+  case 'FlatCritChanceMod':
+    return getName('crit');
+  case 'FlatPhysicalDamageMod':
+    return getName('attackdamage');
+  case 'FlatHPPoolMod':
+    return getName('hp');
+  case 'FlatMPPoolMod':
+    return getName('mp');
+  case 'FlatSpellBlockMod':
+    return getName('spellblock');
+  case 'PercentAttackSpeedMod':
+    return getName('attackspeed');
+  }
+  return key;
+}
+
 export default {
   calculateFinal,
   calculateAtState,
   getName,
+  getModifierName,
   getColor
 };
