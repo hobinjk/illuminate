@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import staticApi from '../static/api';
 import RuneIcon from './RuneIcon';
+import Picker from './Picker';
 import setRuneAtIndex from '../actions/setRuneAtIndex';
 import ChampionStore from '../stores/ChampionStore';
 import { connectToStores } from 'fluxible-addons-react';
@@ -22,11 +23,6 @@ class RunePicker extends React.Component {
     if (!this.state.target) {
       return null;
     }
-    let target = this.state.target;
-    let style = {
-      left: target.offsetLeft,
-      top: target.offsetTop
-    };
 
     let selected = this.state.rune;
     let otherRunes = _.without(staticApi.getRunes(), selected);
@@ -49,9 +45,9 @@ class RunePicker extends React.Component {
       return <RuneIcon rune={rune} onClick={this.pickRune} index={this.state.index}/>
     });
 
-    return <div style={style} className="picker">
+    return <Picker target={this.state.target} visible={this.state.visible} offset="true">
       {runeIcons}
-    </div>;
+    </Picker>;
   }
 }
 

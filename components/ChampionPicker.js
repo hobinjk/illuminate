@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import staticApi from '../static/api';
 import ChampionIcon from './ChampionIcon';
+import Picker from './Picker';
 import setChampion from '../actions/setChampion';
 
 class ChampionPicker extends React.Component {
@@ -20,12 +21,6 @@ class ChampionPicker extends React.Component {
     if (!this.state.target) {
       return null;
     }
-    let rect = this.state.target.getBoundingClientRect();
-    let style = {
-      left: rect.left,
-      top: rect.top,
-      display: this.state.visible ? 'block' : 'none'
-    };
 
     let selected = this.state.champion;
     let otherChampions = _.without(staticApi.getChampions(), selected);
@@ -37,9 +32,9 @@ class ChampionPicker extends React.Component {
       return <ChampionIcon champion={champion} onClick={this.pickChampion}/>
     });
 
-    return <div style={style} className="picker">
+    return <Picker target={this.state.target} visible={this.state.visible}>
       {championIcons}
-    </div>;
+    </Picker>;
   }
 }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import staticApi from '../static/api';
 import ItemIcon from './ItemIcon';
+import Picker from './Picker';
 import setItemAtIndex from '../actions/setItemAtIndex';
 import ChampionStore from '../stores/ChampionStore';
 import { connectToStores } from 'fluxible-addons-react';
@@ -13,6 +14,19 @@ class ItemPicker extends React.Component {
     this.pickItem = this.pickItem.bind(this);
   }
 
+  componentDidUpdate() {
+    let container = React.findDOMNode(this);
+    if (!container) {
+      return;
+    }
+    let actualWidth = container.clientWidth;
+    let desiredWidth = container.offsetWidth;
+    if (desiredWidth - actualWidth === 0) {
+      return;
+    }
+
+    container.style.width = desiredWidth + (desiredWidth - actualWidth) + 'px';
+  }
   pickItem(event, item, index) {
     this.setState({visible: false, target: null});
     this.context.executeAction(setItemAtIndex, {item: item, index: index});
@@ -51,9 +65,9 @@ class ItemPicker extends React.Component {
       return <ItemIcon item={item} onClick={this.pickItem} index={this.state.index}/>
     });
 
-    return <div style={style} className="picker">
+    return <Picker target={this.state.target} visible={this.state.visible}>
       {itemIcons}
-    </div>;
+    </Picker>;
   }
 }
 
