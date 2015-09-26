@@ -43,7 +43,7 @@ body {
   overflow: scroll;
   position: absolute;
   z-index: 100;
-  background-color: rgba(10, 10, 10, 0.2);
+  background-color: rgba(10, 10, 10, 0.8);
 }
 
 #topbar {
