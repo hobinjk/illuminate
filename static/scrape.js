@@ -1,10 +1,10 @@
 var request = require('request-promise');
 var Promise = require('bluebird');
 var Config = require('../configs/api.js');
+var fs = require('fs');
 
-showJoined('item', 'itemListData', ['gold', 'image', 'from', 'stats', 'requiredChampion', 'maps']);
 
-function showJoined(target, dataPrefix, dataNames) {
+function writeJoined(target, dataPrefix, dataNames) {
   var path = 'https://global.api.pvp.net/api/lol/static-data/na/v1.2/' + target + '?api_key=' + Config.API_KEY;
 
   function join(a, b) {
@@ -39,32 +39,36 @@ function showJoined(target, dataPrefix, dataNames) {
     var data = allObjects.map(JSON.parse).reduce(function(a, b) {
       return join(a, b);
     });
-    // data.data['plus'] = {
-    //     'id': 'plus'
-    //   , 'name': 'Add another item'
-    //   , 'description': ''
-    //   , 'gold': {
-    //       'base': 0
-    //     , 'total': 0
-    //     , 'purchasable': true
-    //   }
-    //   , 'image': {
-    //       'full': 'plus.png'
-    //     , 'sprite': 'plus.png'
-    //     , 'group': 'item'
-    //     , 'x': 144
-    //     , 'y': 48
-    //     , 'w': 48
-    //     , 'h': 48
-    //   }
-    //   , 'from': []
-    //   , 'stats': {}
-    // };
-    console.log(JSON.stringify(data));
+    if (target === 'item') {
+      data.data['plus'] = {
+          'id': 'plus'
+        , 'name': 'Add another item'
+        , 'description': ''
+        , 'gold': {
+            'base': 0
+          , 'total': 0
+          , 'purchasable': true
+        }
+        , 'image': {
+            'full': 'plus.png'
+          , 'sprite': 'plus.png'
+          , 'group': 'item'
+          , 'x': 144
+          , 'y': 48
+          , 'w': 48
+          , 'h': 48
+        }
+        , 'from': []
+        , 'stats': {}
+      };
+    }
 
+    var rawJson = JSON.stringify(data);
+    fs.writeFileSync(target + '.js', 'export default ' + rawJson + ';');
   });
 }
 
-// showJoined('champion', 'champData', ['image', 'stats']);
-// showJoined('rune', 'runeListData', ['image', 'stats']);
-// showJoined('mastery', 'masteryListData', ['all']);
+writeJoined('item', 'itemListData', ['gold', 'image', 'from', 'stats', 'requiredChampion', 'maps']);
+writeJoined('champion', 'champData', ['image', 'stats']);
+writeJoined('rune', 'runeListData', ['image', 'stats']);
+writeJoined('mastery', 'masteryListData', ['all']);
