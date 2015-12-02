@@ -115,3 +115,7 @@ body {
   border-radius: 8px;
   z-index: 50;
 }
+
+.stat-graphs-level-line {
+  fill: #CFBA6B;
+}

@@ -24,7 +24,7 @@ function calculateAtState(state, champion, runePage, buildOrder) {
 
   let championLevel = getLevelFromXp(state.xp);
 
-  let stats = {magicdamage: 0, attackspeed: 0};
+  let stats = {magicdamage: 0, attackspeed: 0, level: championLevel};
   for (let base of baseStats) {
     stats[base] = champion.stats[base] || 0;
     let perLevel = champion.stats[base + 'perlevel'] || 0;

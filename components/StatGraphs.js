@@ -42,7 +42,7 @@ class StatGraphs extends React.Component {
       .attr('width', width)
       .attr('height', height)
       .append('g')
-      .attr('class', 'series-lines');
+      .attr('class', 'stat-graphs-graphics');
 
     d3.select(graphContainer).on('mouseleave', () => {
       this.context.executeAction(endStatGraphsHover, {});
@@ -113,7 +113,7 @@ class StatGraphs extends React.Component {
     });
 
     let seriesLines = d3.select(graphContainer)
-      .selectAll('.series-lines')
+      .selectAll('.stat-graphs-graphics')
       .selectAll('.series-line')
       .data(seriesList);
 
@@ -134,6 +134,48 @@ class StatGraphs extends React.Component {
 
 
     seriesLines.exit().remove();
+
+    let levelData = null;
+    seriesList.forEach(series => {
+      if (series.key === 'level') {
+        levelData = series.data;
+      }
+    });
+
+    if (levelData) {
+      let lastLevel = 0;
+      let levelUpData = [];
+
+      levelData.forEach(level => {
+        if (level.value <= lastLevel) {
+          return;
+        }
+        lastLevel = level.value;
+        levelUpData.push(level);
+      });
+
+      console.log(levelUpData);
+
+      let levelTimeline = d3.select(graphContainer)
+        .selectAll('.stat-graphs-graphics')
+        .selectAll('.stat-graphs-level-line')
+        .data(levelUpData);
+
+      levelTimeline.enter()
+        .append('text')
+        .attr('class', 'stat-graphs-level-line')
+        .text(level => {
+          return level.value;
+        });
+
+      levelTimeline.transition()
+        .attr('x', level => {
+          return xScale(level.time);
+        })
+        .attr('y', height);
+
+      levelTimeline.exit().remove();
+    }
   }
 
   destroyGraph(graphContainer) {
