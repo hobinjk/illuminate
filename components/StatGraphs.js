@@ -39,7 +39,7 @@ class StatGraphs extends React.Component {
     let height = graphContainer.getBoundingClientRect().height;
 
     let svg = d3.select(graphContainer).append('svg')
-      .attr('width', width)
+      .attr('width', '100%')
       .attr('height', height)
       .append('g')
       .attr('class', 'stat-graphs-graphics');
