@@ -10,9 +10,8 @@ class Application extends React.Component {
         <div id="topbar">
           <span className="title-topbar">Illuminate</span>
           <div id="topbar-menu">
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/how-to">How To</a>
+            <a href="https://github.com/hobinjk/illuminate">Project Home</a>
+            <a href="https://github.com/hobinjk/illuminate/blob/master/TUTORIAL.md">Tutorial</a>
           </div>
         </div>
         <div id="application">
