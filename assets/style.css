@@ -117,6 +117,10 @@ body {
   z-index: 50;
 }
 
+.item-icon-tooltip {
+  z-index: 150;
+}
+
 .stat-graphs-level-line {
   fill: #CFBA6B;
 }

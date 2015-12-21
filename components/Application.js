@@ -2,6 +2,7 @@ import React from 'react';
 import { provideContext } from 'fluxible-addons-react';
 import ChampionBar from './ChampionBar';
 import StatGraphs from './StatGraphs';
+import ItemTooltip from './ItemTooltip';
 
 class Application extends React.Component {
   render() {
@@ -17,6 +18,7 @@ class Application extends React.Component {
         <div id="application">
           <ChampionBar />
           <StatGraphs/>
+          <ItemTooltip/>
         </div>
       </div>
     );

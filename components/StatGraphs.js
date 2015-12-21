@@ -154,8 +154,6 @@ class StatGraphs extends React.Component {
         levelUpData.push(level);
       });
 
-      console.log(levelUpData);
-
       let levelTimeline = d3.select(graphContainer)
         .selectAll('.stat-graphs-graphics')
         .selectAll('.stat-graphs-level-line')
