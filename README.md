@@ -10,6 +10,11 @@ minute data is from a low Gold match, your personal values may differ.
 - Pull data from match API
 - Export to item set
 - Support runes and masteries
+- Allow alternatives
 - Drag to reorder items
 - Animate transitions
 - Host public-facing website
+
+## Running Locally
+`npm run dev`
+Maybe also `webpack --watch --progress --colors`
